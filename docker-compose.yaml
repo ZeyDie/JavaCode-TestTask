@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "wallet_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  wallet-app:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/wallet_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - '8080:8080'
+
+volumes:
+  pgdata:
